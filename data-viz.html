@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>EOSDIS PubData</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.21.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.2"></script>
+</head>
+
+<body>
+  <div id="vis0"></div>
+  <div id="vis1"></div>
+
+  <script type="text/javascript">
+    var v0 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 1500,
+      "height": 400,
+      "autosize": { "type": "fit", "contains": "padding" },
+      "description": "A simple bar chart with embedded data.",
+      "data": {
+        "url": "https://raw.githubusercontent.com/vinnyinverso/pub-data/main/article_db.csv",
+        "format": "csv"
+      },
+      "mark": { "type": "line", "tooltip": true },
+      "encoding": {
+        "x": { "field": "pub_year", "type": "temporal" },
+        "y": { "aggregate": "distinct", "field": "pub_doi" }
+      },
+      "transform": [
+        { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "1998" } }
+      ]
+    };
+    vegaEmbed('#vis0', v0);
+
+    var v1 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 1500,
+      "height": 700,
+      "layer": [
+        {
+          "data": {
+
+            "url": "https://raw.githubusercontent.com/vinnyinverso/pub-data/main/world-110m.json",
+            "format": { "type": "topojson", "feature": "countries" }
+          },
+          "mark": { "type": "geoshape", "fill": "lightgray", "stroke": "gray" }
+        },
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/vinnyinverso/pub-data/main/locations.csv"
+          },
+          "projection": {
+            "type": "equalEarth"
+          },
+          "mark": "circle",
+          "encoding": {
+            "longitude": {
+              "field": "longitude",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "latitude",
+              "type": "quantitative"
+            },
+            "size": { "value": 30 },
+            "color": { "value": "steelblue" }
+          }
+        }
+      ]
+    };
+    vegaEmbed('#vis1', v1);
+  </script>
+</body>
+
+</html>
