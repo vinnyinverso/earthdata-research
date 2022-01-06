@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>EOSDIS PubData</title>
+  <title>Earthdata Research</title>
   <script src="https://cdn.jsdelivr.net/npm/vega@5.21.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.2.0"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.2"></script>
@@ -11,6 +11,7 @@
 <body>
   <div id="vis0"></div>
   <div id="vis1"></div>
+  <div id="vis2"></div>
 
   <script type="text/javascript">
     var v0 = {
@@ -20,11 +21,13 @@
       "autosize": { "type": "fit", "contains": "padding" },
       "description": "A simple bar chart with embedded data.",
       "data": {
-        "url": "https://raw.githubusercontent.com/vinnyinverso/pub-data/main/article_db.csv",
-        "format": "csv"
+        "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
       },
       "mark": { "type": "line", "tooltip": true },
       "encoding": {
+        "tooltip": [
+          { "aggregate": "distinct", "type": "quantitative", "field": "pub_doi" }
+        ],
         "x": { "field": "pub_year", "type": "temporal" },
         "y": { "aggregate": "distinct", "field": "pub_doi" }
       },
@@ -37,25 +40,32 @@
     var v1 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
       "width": 1500,
-      "height": 700,
+      "height": 500,
       "layer": [
         {
           "data": {
-
-            "url": "https://raw.githubusercontent.com/vinnyinverso/pub-data/main/world-110m.json",
+            "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/world-110m.json",
             "format": { "type": "topojson", "feature": "countries" }
           },
           "mark": { "type": "geoshape", "fill": "lightgray", "stroke": "gray" }
         },
         {
           "data": {
-            "url": "https://raw.githubusercontent.com/vinnyinverso/pub-data/main/locations.csv"
+            "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/locations.csv"
           },
           "projection": {
             "type": "equalEarth"
           },
-          "mark": "circle",
+          "mark": {
+            "type": "circle",
+            "size": 10,
+            "color": "steelblue"
+          },
           "encoding": {
+            "tooltip": [
+              { "field": "latitude", "type": "quantitative" },
+              { "field": "longitude", "type": "quantitative" }
+            ],
             "longitude": {
               "field": "longitude",
               "type": "quantitative"
@@ -63,14 +73,49 @@
             "latitude": {
               "field": "latitude",
               "type": "quantitative"
-            },
-            "size": { "value": 30 },
-            "color": { "value": "steelblue" }
+            }
           }
         }
       ]
     };
     vegaEmbed('#vis1', v1);
+
+    var v2 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 1500,
+      "height": 500,
+      "title": "Datsets per Publication per Year",
+      "data": {
+        "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
+      },
+      "transform": [
+        {
+          "aggregate": [{
+            "op": "distinct",
+            "field": "pub_doi",
+            "as": "distinct_pub_doi"
+          },
+          {
+            "op": "count",
+            "field": "ds_doi",
+            "as": "count_ds_doi"
+          }],
+          "groupby": ["pub_year"]
+        },
+        { "calculate": "datum.count_ds_doi / datum.distinct_pub_doi", "as": "Mean Datasets Per Publication" }
+
+      ],
+      "layer": [
+        {
+          "mark":{"type": "square", "size": 200},
+          "encoding": {
+            "x": { "field": "pub_year", "type": "temporal" },
+            "y": { "field": "Mean Datasets Per Publication", "type": "quantitative" }
+          }
+        },
+      ],
+    };
+    vegaEmbed('#vis2', v2);
   </script>
 </body>
 
