@@ -12,6 +12,7 @@
   <div id="vis0"></div>
   <div id="vis1"></div>
   <div id="vis2"></div>
+  <div id="vis3"></div>
 
   <script type="text/javascript">
     var v0 = {
@@ -90,16 +91,18 @@
       },
       "transform": [
         {
-          "aggregate": [{
-            "op": "distinct",
-            "field": "pub_doi",
-            "as": "distinct_pub_doi"
-          },
-          {
-            "op": "count",
-            "field": "ds_doi",
-            "as": "count_ds_doi"
-          }],
+          "aggregate": [
+            {
+              "op": "distinct",
+              "field": "pub_doi",
+              "as": "distinct_pub_doi"
+            },
+            {
+              "op": "count",
+              "field": "ds_doi",
+              "as": "count_ds_doi"
+            }
+          ],
           "groupby": ["pub_year"]
         },
         { "calculate": "datum.count_ds_doi / datum.distinct_pub_doi", "as": "Mean Datasets Per Publication" }
@@ -107,7 +110,7 @@
       ],
       "layer": [
         {
-          "mark":{"type": "square", "size": 200},
+          "mark": { "type": "square", "size": 200 },
           "encoding": {
             "x": { "field": "pub_year", "type": "temporal" },
             "y": { "field": "Mean Datasets Per Publication", "type": "quantitative" }
@@ -116,6 +119,34 @@
       ],
     };
     vegaEmbed('#vis2', v2);
+
+    var v3 = {
+      "data": {"url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"},
+      "mark": "bar",
+      "width": 1300,
+      "height": 500,
+      "encoding": {
+        "x": {"type": "quantitative", "field": "count"},
+        "y": {"type": "nominal", "field": "ds_title", "sort": {"field": "count", "order": "descending" }}
+      },
+      "transform": [
+        {
+          "aggregate": [
+            {"op": "count", "field": "ds_doi", "as": "count"}
+          ],
+          "groupby": ["ds_title"]
+        },
+        {
+          "window": [{"op": "row_number", "field": "", "as": "rank"}],
+          "sort": [{"field": "count", "order": "descending"}]
+        },
+        {"filter": "datum.rank < 10"},
+        {"filter": "datum.ds_title != ''"}
+      ],
+      "$schema": "https://vega.github.io/schema/vega-lite/v3.2.1.json"
+    };
+
+    vegaEmbed('#vis3', v3);
   </script>
 </body>
 
