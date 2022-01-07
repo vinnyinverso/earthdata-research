@@ -13,6 +13,9 @@
   <div id="vis1"></div>
   <div id="vis2"></div>
   <div id="vis3"></div>
+  <div id="vis4"></div>
+  <div id="vis5"></div>
+  <div id="vis6"></div>
 
   <script type="text/javascript">
     var v0 = {
@@ -110,7 +113,29 @@
       ],
       "layer": [
         {
-          "mark": { "type": "square", "size": 200 },
+          "mark": {
+            "type": "area",
+            "line": {
+              "color": "steelblue"
+            },
+            "color": {
+              "x1": 1,
+              "y1": 1,
+              "x2": 1,
+              "y2": 0,
+              "gradient": "linear",
+              "stops": [
+                {
+                  "offset": 0,
+                  "color": "white"
+                },
+                {
+                  "offset": 1,
+                  "color": "steelblue"
+                }
+              ]
+            }
+          },
           "encoding": {
             "x": { "field": "pub_year", "type": "temporal" },
             "y": { "field": "Mean Datasets Per Publication", "type": "quantitative" }
@@ -121,32 +146,210 @@
     vegaEmbed('#vis2', v2);
 
     var v3 = {
-      "data": {"url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"},
-      "mark": "bar",
+      "data": { "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv" },
       "width": 1300,
       "height": 500,
-      "encoding": {
-        "x": {"type": "quantitative", "field": "count"},
-        "y": {"type": "nominal", "field": "ds_title", "sort": {"field": "count", "order": "descending" }}
-      },
       "transform": [
         {
           "aggregate": [
-            {"op": "count", "field": "ds_doi", "as": "count"}
+            { "op": "count", "field": "ds_doi", "as": "count" }
           ],
           "groupby": ["ds_title"]
         },
         {
-          "window": [{"op": "row_number", "field": "", "as": "rank"}],
-          "sort": [{"field": "count", "order": "descending"}]
+          "window": [{ "op": "row_number", "field": "", "as": "rank" }],
+          "sort": [{ "field": "count", "order": "descending" }]
         },
-        {"filter": "datum.rank < 10"},
-        {"filter": "datum.ds_title != ''"}
+        { "filter": "datum.rank < 10" },
+        { "filter": "datum.ds_title != ''" }
+      ],
+      "encoding": {
+        "y": { "type": "nominal", "field": "ds_title", "sort": { "field": "ds_doi", "order": "ascending", "op": "count" }, "axis": null }
+      },
+      "layer": [
+        {
+          "mark": { "type": "bar", "color": "#ddd" }, "encoding": {
+            "x": { "type": "quantitative", "field": "count" }
+          }
+        },
+        {
+          "mark": { "type": "text", "align": "left", "x": 5 },
+          "encoding": {
+            "text": { "field": "ds_title" }
+          }
+        }
       ],
       "$schema": "https://vega.github.io/schema/vega-lite/v3.2.1.json"
     };
 
     vegaEmbed('#vis3', v3);
+
+    var v4 = {
+      "width": 1000,
+      "height": 500,
+      autosize: {
+        type: "fit",
+        contains: "padding",
+        resize: true,
+      },
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "description": "A simple pie chart with labels.",
+      "transform": [
+        {
+          "aggregate": [
+            { "op": "distinct", "field": "pub_doi", "as": "pub_count" }
+          ],
+          "groupby": ["pub_journal"]
+        },
+        {
+          "window": [{ "op": "row_number", "as": "rank" }],
+          "sort": [{ "field": "pub_count", "order": "descending" }]
+        },
+        { "filter": "datum.rank < 10" },
+        { "filter": "datum.pub_journal != ''" }
+      ],
+      "data": {
+        "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
+      },
+      "encoding": {
+        "theta": { "field": "pub_count", "type": "quantitative", "stack": true },
+        "color": { "field": "pub_journal", "type": "nominal" }
+      },
+      "layer": [{
+        "mark": { "type": "arc", "outerRadius": 250 },
+
+      }
+        , {
+        "mark": { "type": "text", "radius": 90 },
+        "encoding": {
+          "color": { "value": "black" },
+          "text": { "field": "pub_journal", "type": "nominal" }
+        }
+      }
+      ]
+    };
+
+    vegaEmbed('#vis4', v4);
+
+    var v5 = {
+      "width": 1200,
+      "height": 500,
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "data": {
+        "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
+      },
+      "title": "Dataset-Journal Copresence",
+      "config": {
+        "view": {
+          "strokeWidth": 0,
+          "step": 13
+        },
+        "axis": {
+          "domain": false
+        }
+      },
+      "transform": [
+        { "filter": "datum.pub_journal != ''" },
+        { "filter": "datum.ds_title != ''" },
+        {
+          "joinaggregate": [{
+            "op": "count",
+            "field": "*",
+            "as": "count_ds_title"
+          }],
+          "groupby": [
+            "ds_title"
+          ]
+        },
+        {
+          "joinaggregate": [{
+            "op": "count",
+            "field": "*",
+            "as": "count_pub_journal"
+          }],
+          "groupby": [
+            "pub_journal"
+          ]
+        },
+        { "filter": "datum.count_ds_title > 40" },
+        { "filter": "datum.count_pub_journal > 30" }
+      ],
+      "mark": { "type": "rect", "tooltip": { "content": "data" } },
+      "encoding": {
+        "x": {
+          "field": "pub_journal",
+          "type": "nominal"
+        },
+        "y": {
+          "field": "ds_title",
+          "type": "ordinal"
+        },
+        "color": {
+          "field": "*",
+          "aggregate": "count",
+          "type": "quantitative",
+          "legend": {
+            "title": null
+          }
+        }
+      }
+    };
+
+    vegaEmbed('#vis5', v5);
+
+    var v6 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "data": {
+        "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
+      },
+      "title": "Rare Journals",
+      "config": {
+        "view": {
+          "strokeWidth": 0,
+          "step": 13
+        },
+        "axis": {
+          "domain": false
+        }
+      },
+      "transform": [
+        { "filter": "datum.pub_journal != ''" },
+        { "filter": "datum.ds_title != ''" },
+
+        {
+          "joinaggregate": [{
+            "op": "count",
+            "field": "*",
+            "as": "count_pub_journal"
+          }],
+          "groupby": [
+            "pub_journal"
+          ]
+        },
+
+        { "filter": "datum.count_pub_journal < 5" }
+      ],
+      "mark": { "type": "rect" },
+      "encoding": {
+        "tooltip": { "field": "pub_title", "aggregate": "values", "type": "nominal" },
+        "y": {
+          "field": "pub_journal",
+          "type": "nominal",
+          "sort": { "field": "count_pub_journal" }
+        },
+        "x": {
+          "field": "*",
+          "aggregate": "count"
+        },
+        "color": {
+          "field": "*",
+          "aggregate": "count"
+        }
+      }
+    };
+    vegaEmbed('#vis6', v6)
+
+
   </script>
 </body>
 
