@@ -10,12 +10,20 @@
 
 <body>
   <div id="vis0"></div>
+  <br>
   <div id="vis1"></div>
+  <br>
   <div id="vis2"></div>
+  <br>
   <div id="vis3"></div>
+  <br>
   <div id="vis4"></div>
+  <br>
   <div id="vis5"></div>
+  <br>
   <div id="vis6"></div>
+  <br>
+  <div id="vis7"></div>
 
   <script type="text/javascript">
     var v0 = {
@@ -113,35 +121,33 @@
       ],
       "layer": [
         {
-          "mark": {
-            "type": "area",
-            "line": {
-              "color": "steelblue"
-            },
-            "color": {
-              "x1": 1,
-              "y1": 1,
-              "x2": 1,
-              "y2": 0,
-              "gradient": "linear",
-              "stops": [
-                {
-                  "offset": 0,
-                  "color": "white"
-                },
-                {
-                  "offset": 1,
-                  "color": "steelblue"
-                }
-              ]
-            }
-          },
+      "mark": {"type": "errorband", "extent": "stdev", "opacity": 0.2},
+      "encoding": {
+        "y": {
+          "field": "Mean Datasets Per Publication",
+          "type": "quantitative",
+          "title": "Mean Datasets Per Publication"
+        }
+      }
+    },
+    {
+      "mark": "rule",
+      "encoding": {
+        "y": {
+          "field": "Mean Datasets Per Publication",
+          "type": "quantitative",
+          "aggregate": "mean"
+        }
+      }
+    },
+        {
+          "mark": "point",
           "encoding": {
             "x": { "field": "pub_year", "type": "temporal" },
-            "y": { "field": "Mean Datasets Per Publication", "type": "quantitative" }
+            "y": { "field": "Mean Datasets Per Publication", "type": "quantitative"}
           }
-        },
-      ],
+        }
+      ]
     };
     vegaEmbed('#vis2', v2);
 
@@ -187,11 +193,6 @@
     var v4 = {
       "width": 1000,
       "height": 500,
-      autosize: {
-        type: "fit",
-        contains: "padding",
-        resize: true,
-      },
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
       "description": "A simple pie chart with labels.",
       "transform": [
@@ -212,20 +213,20 @@
         "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
       },
       "encoding": {
-        "theta": { "field": "pub_count", "type": "quantitative", "stack": true },
-        "color": { "field": "pub_journal", "type": "nominal" }
+        "y": { "type": "nominal", "field": "pub_journal", "sort": { "field": "pub_journal", "order": "ascending", "op": "count" }, "axis": null }
       },
-      "layer": [{
-        "mark": { "type": "arc", "outerRadius": 250 },
-
-      }
-        , {
-        "mark": { "type": "text", "radius": 90 },
-        "encoding": {
-          "color": { "value": "black" },
-          "text": { "field": "pub_journal", "type": "nominal" }
+      "layer": [
+        {
+          "mark": { "type": "bar", "color": "#ddd" }, "encoding": {
+            "x": { "type": "quantitative", "field": "pub_count" }
+          }
+        },
+        {
+          "mark": { "type": "text", "align": "left", "x": 5 },
+          "encoding": {
+            "text": { "field": "pub_journal" }
+          }
         }
-      }
       ]
     };
 
@@ -302,7 +303,6 @@
       "data": {
         "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
       },
-      "title": "Rare Journals",
       "config": {
         "view": {
           "strokeWidth": 0,
@@ -327,28 +327,121 @@
           ]
         },
 
-        { "filter": "datum.count_pub_journal < 5" }
+        { "filter": "datum.count_pub_journal == 1" }
       ],
-      "mark": { "type": "rect" },
+      "layer": [
+          {
+          "mark": { "type": "bar", "color": "#ddd" }, "encoding": {
+            "x": { "type": "quantitative", "field": "count", "axis": null }
+          }
+        },
+          {
+          "mark": { "type": "text", "align": "left", "x": 5 },
+          "encoding": {
+            "text": { "field": "pub_journal" },
+            "color": {
+            "condition": {"test": {"field": "pub_journal", "oneOf": [
+              "Journal of Economic Perspectives",
+              "Journal of Archaeological Science: Reports",
+              "Environmental Biology of Fishes",
+              "Journal of Applied Research on Medicinal and Aromatic Plants",
+              "IEICE TRANSACTIONS on Fundamentals of Electronics, Communications and Computer Sciences",
+              "Weather, Climate, and Society",
+              "Environmental Technology & Innovation",
+              "Renewable and Sustainable Energy Reviews",
+              "Energy Economics",
+              "Journal of Open Research Software"
+
+              ]}, "value": "blue"},
+            "value": "black"
+            },
+             "size": {
+            "condition": {"test": {"field": "pub_journal", "oneOf": [
+              "Journal of Economic Perspectives",
+              "Journal of Archaeological Science: Reports",
+              "Environmental Biology of Fishes",
+              "Journal of Applied Research on Medicinal and Aromatic Plants",
+              "IEICE TRANSACTIONS on Fundamentals of Electronics, Communications and Computer Sciences",
+              "Weather, Climate, and Society",
+              "Environmental Technology & Innovation",
+              "Renewable and Sustainable Energy Reviews",
+              "Energy Economics",
+              "Journal of Open Research Software"
+
+              ]}, "value": 14},
+              "value": 11
+            }
+          }
+        }
+      ],
       "encoding": {
-        "tooltip": { "field": "pub_title", "aggregate": "values", "type": "nominal" },
+        "tooltip": { "field": "pub_title"},
         "y": {
           "field": "pub_journal",
           "type": "nominal",
-          "sort": { "field": "count_pub_journal" }
-        },
-        "x": {
-          "field": "*",
-          "aggregate": "count"
-        },
-        "color": {
-          "field": "*",
-          "aggregate": "count"
+          "axis": null
         }
       }
     };
     vegaEmbed('#vis6', v6)
 
+    var v7 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 1500,
+      "height": 500,
+      "title": "Mentions of Machine Learning in Publication Titles",
+      "data": {
+        "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
+      },
+      "transform": [
+        {"filter": "!isValid(datum.pub_title) ? false : (indexof(datum.pub_title, 'machine learning') > -1 || indexof(datum.pub_title, 'Machine Learning') > -1)"},
+        { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "2013" } },
+        {
+          "aggregate": [
+            {
+              "op": "distinct",
+              "field": "pub_doi",
+              "as": "distinct_pub_doi"
+            }
+          ],
+          "groupby": ["pub_year"]
+        }
+      ],
+      "layer": [
+        {
+      "mark": {
+        "type": "line",
+        "color": "firebrick"
+      },
+      "transform": [
+        {
+          "regression": "pub_year",
+          "on": "distinct_pub_doi",
+          "method": "pow"
+        }
+      ],
+      "encoding": {
+        "x": {
+          "field": "pub_year",
+          "type": "temporal"
+        },
+        "y": {
+          "field": "distinct_pub_doi",
+          "type": "quantitative"
+        }
+      }
+    },
+        {
+          "mark": {"type": "point", "size": 80},
+          "encoding": {
+            "x": { "field": "pub_year", "type": "temporal" },
+            "y": { "field": "distinct_pub_doi", "type": "quantitative"}
+          }
+        }
+      ]
+    };
+
+    vegaEmbed('#vis7', v7)
 
   </script>
 </body>
