@@ -8,51 +8,105 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.20.2"></script>
 </head>
 
+<style>
+  .viz-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .viz-item {
+    width: 80%;
+  }
+</style>
+
 <body>
-  <div id="vis0"></div>
-  <br>
-  <div id="vis1"></div>
-  <br>
-  <div id="vis2"></div>
-  <br>
-  <div id="vis3"></div>
-  <br>
-  <div id="vis4"></div>
-  <br>
-  <div id="vis5"></div>
-  <br>
-  <div id="vis6"></div>
-  <br>
-  <div id="vis7"></div>
+  <div class="viz-container">
+    <h1>Research Publications with EOSDIS Data</h1>
+    <p style="width: 80%;">
+      The following charts show analyses that were built upon a datset of over <b>10,000
+        research publications</b> that reference EOSDIS datasets from 1974 to the present.
+      Results are biased toward specific datasets and areas of study within
+      EOSDIS depending upon where and how the data was collected. Crucial data contributions were made by
+      individuals from various Distributed Active Archive Centers:
+      Irina Gerasimov and Dave Meyer from GES DISC DAAC,
+      Wade Albright from Alaska Satellite Facility DAAC,
+      Chris Torbert and Danielle Golon from The Land Processes DAAC,
+      Suresh Vannan and Ed Armstrong from The Physical Oceanography DAAC,
+      and Bruce Wilson from Oak Ridge National Laboratory DAAC.
+    </p>
+    <h2>Count of Publications By Year</h2>
+    <div class="viz-item" id="vis0"></div>
+    <h2>Publication Abstract Text Embedding Clusters</h2>
+    <div class="viz-item" id="vis8"></div>
+    <h2>Publication Location of Study</h2>
+    <div class="viz-item" id="vis1"></div>
+    <h2>Average Number of Datasets Referenced Per Publication</h2>
+    <div class="viz-item" id="vis2"></div>
+    <h2>Frequently Referenced Datasets</h2>
+    <div class="viz-item" id="vis3"></div>
+    <h2>Frequent Journals</h2>
+    <div class="viz-item" id="vis4"></div>
+    <h2>Dataset Journal Copresence</h2>
+    <div class="viz-item" id="vis5"></div>
+    <h2>Journals with Count of Publications = 1</h2>
+    <div class="viz-item" id="vis6" style="width: initial;"></div>
+    <h2>Mentions of Machine Learning in Publication Titles</h2>
+    <div class="viz-item" id="vis7"></div>
+  </div>
 
   <script type="text/javascript">
     var v0 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 1500,
+      "width": "container",
       "height": 400,
-      "autosize": { "type": "fit", "contains": "padding" },
       "description": "A simple bar chart with embedded data.",
       "data": {
         "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
       },
-      "mark": { "type": "line", "tooltip": true },
+      "mark": {
+        "tooltip": true,
+        "type": "area",
+        "line": {
+          "color": "steelblue"
+        },
+        "color": {
+          "x1": 1,
+          "y1": 1,
+          "x2": 1,
+          "y2": 0,
+          "gradient": "linear",
+          "stops": [
+            {
+              "offset": 0,
+              "color": "white"
+            },
+            {
+              "offset": 1,
+              "color": "steelblue"
+            }
+          ]
+        }
+      },
       "encoding": {
         "tooltip": [
-          { "aggregate": "distinct", "type": "quantitative", "field": "pub_doi" }
+          { "aggregate": "distinct", "type": "quantitative", "field": "pub_doi", "title": "Count of Publications" }
         ],
-        "x": { "field": "pub_year", "type": "temporal" },
-        "y": { "aggregate": "distinct", "field": "pub_doi" }
+        "x": { "field": "pub_year", "type": "temporal", "title": "Publication Year" },
+        "y": { "aggregate": "distinct", "field": "pub_doi", "title": "Count of Publications" }
       },
       "transform": [
         { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "1998" } }
       ]
     };
-    vegaEmbed('#vis0', v0);
+    vegaEmbed('#vis0', v0, {"actions": false});
 
     var v1 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 1500,
-      "height": 500,
+      "width": "container",
+      "height": 400,
       "layer": [
         {
           "data": {
@@ -90,13 +144,12 @@
         }
       ]
     };
-    vegaEmbed('#vis1', v1);
+    vegaEmbed('#vis1', v1, {"actions": false});
 
     var v2 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 1500,
-      "height": 500,
-      "title": "Datsets per Publication per Year",
+      "width": "container",
+      "height": 400,
       "data": {
         "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
       },
@@ -116,45 +169,48 @@
           ],
           "groupby": ["pub_year"]
         },
-        { "calculate": "datum.count_ds_doi / datum.distinct_pub_doi", "as": "Mean Datasets Per Publication" }
+        { "calculate": "format(datum.count_ds_doi / datum.distinct_pub_doi, ',.2f')", "as": "mean_ds" }
 
       ],
       "layer": [
         {
-      "mark": {"type": "errorband", "extent": "stdev", "opacity": 0.2},
-      "encoding": {
-        "y": {
-          "field": "Mean Datasets Per Publication",
-          "type": "quantitative",
-          "title": "Mean Datasets Per Publication"
-        }
-      }
-    },
-    {
-      "mark": "rule",
-      "encoding": {
-        "y": {
-          "field": "Mean Datasets Per Publication",
-          "type": "quantitative",
-          "aggregate": "mean"
-        }
-      }
-    },
+          "mark": { "type": "errorband", "extent": "stdev", "opacity": 0.2 },
+          "encoding": {
+            "y": {
+              "field": "mean_ds",
+              "type": "quantitative",
+              "title": "Average Number of Datasets Per Publication"
+            }
+          }
+        },
+        {
+          "mark": "rule",
+          "encoding": {
+            "y": {
+              "field": "mean_ds",
+              "type": "quantitative",
+              "aggregate": "mean"
+            }
+          }
+        },
         {
           "mark": "point",
           "encoding": {
-            "x": { "field": "pub_year", "type": "temporal" },
-            "y": { "field": "Mean Datasets Per Publication", "type": "quantitative"}
+            "tooltip": {
+              "field": "mean_ds"
+            },
+            "x": { "field": "pub_year", "type": "temporal", "title": "Publication Year" },
+            "y": { "field": "mean_ds", "type": "quantitative" }
           }
         }
       ]
     };
-    vegaEmbed('#vis2', v2);
+    vegaEmbed('#vis2', v2, {"actions": false});
 
     var v3 = {
       "data": { "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv" },
-      "width": 1300,
-      "height": 500,
+      "width": "container",
+      "height": 400,
       "transform": [
         {
           "aggregate": [
@@ -175,7 +231,7 @@
       "layer": [
         {
           "mark": { "type": "bar", "color": "#ddd" }, "encoding": {
-            "x": { "type": "quantitative", "field": "count" }
+            "x": { "type": "quantitative", "field": "count", "title": "Count of Dataset References" }
           }
         },
         {
@@ -185,16 +241,15 @@
           }
         }
       ],
-      "$schema": "https://vega.github.io/schema/vega-lite/v3.2.1.json"
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json"
     };
 
-    vegaEmbed('#vis3', v3);
+    vegaEmbed('#vis3', v3, {"actions": false});
 
     var v4 = {
-      "width": 1000,
-      "height": 500,
+      "width": "container",
+      "height": 400,
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "description": "A simple pie chart with labels.",
       "transform": [
         {
           "aggregate": [
@@ -218,7 +273,7 @@
       "layer": [
         {
           "mark": { "type": "bar", "color": "#ddd" }, "encoding": {
-            "x": { "type": "quantitative", "field": "pub_count" }
+            "x": { "type": "quantitative", "field": "pub_count", "title": "Count of Publications" }
           }
         },
         {
@@ -230,16 +285,15 @@
       ]
     };
 
-    vegaEmbed('#vis4', v4);
+    vegaEmbed('#vis4', v4, {"actions": false});
 
     var v5 = {
-      "width": 1200,
-      "height": 500,
+      "width": "container",
+      "height": 400,
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
       "data": {
         "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
       },
-      "title": "Dataset-Journal Copresence",
       "config": {
         "view": {
           "strokeWidth": 0,
@@ -279,11 +333,13 @@
       "encoding": {
         "x": {
           "field": "pub_journal",
-          "type": "nominal"
+          "type": "nominal",
+          "title": ""
         },
         "y": {
           "field": "ds_title",
-          "type": "ordinal"
+          "type": "ordinal",
+          "title": ""
         },
         "color": {
           "field": "*",
@@ -296,7 +352,7 @@
       }
     };
 
-    vegaEmbed('#vis5', v5);
+    vegaEmbed('#vis5', v5, {"actions": false});
 
     var v6 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -330,52 +386,20 @@
         { "filter": "datum.count_pub_journal == 1" }
       ],
       "layer": [
-          {
+        {
           "mark": { "type": "bar", "color": "#ddd" }, "encoding": {
             "x": { "type": "quantitative", "field": "count", "axis": null }
           }
         },
-          {
+        {
           "mark": { "type": "text", "align": "left", "x": 5 },
           "encoding": {
-            "text": { "field": "pub_journal" },
-            "color": {
-            "condition": {"test": {"field": "pub_journal", "oneOf": [
-              "Journal of Economic Perspectives",
-              "Journal of Archaeological Science: Reports",
-              "Environmental Biology of Fishes",
-              "Journal of Applied Research on Medicinal and Aromatic Plants",
-              "IEICE TRANSACTIONS on Fundamentals of Electronics, Communications and Computer Sciences",
-              "Weather, Climate, and Society",
-              "Environmental Technology & Innovation",
-              "Renewable and Sustainable Energy Reviews",
-              "Energy Economics",
-              "Journal of Open Research Software"
-
-              ]}, "value": "blue"},
-            "value": "black"
-            },
-             "size": {
-            "condition": {"test": {"field": "pub_journal", "oneOf": [
-              "Journal of Economic Perspectives",
-              "Journal of Archaeological Science: Reports",
-              "Environmental Biology of Fishes",
-              "Journal of Applied Research on Medicinal and Aromatic Plants",
-              "IEICE TRANSACTIONS on Fundamentals of Electronics, Communications and Computer Sciences",
-              "Weather, Climate, and Society",
-              "Environmental Technology & Innovation",
-              "Renewable and Sustainable Energy Reviews",
-              "Energy Economics",
-              "Journal of Open Research Software"
-
-              ]}, "value": 14},
-              "value": 11
-            }
+            "text": { "field": "pub_journal" }
           }
         }
       ],
       "encoding": {
-        "tooltip": { "field": "pub_title"},
+        "tooltip": { "field": "pub_title" },
         "y": {
           "field": "pub_journal",
           "type": "nominal",
@@ -383,18 +407,17 @@
         }
       }
     };
-    vegaEmbed('#vis6', v6)
+    vegaEmbed('#vis6', v6, {"actions": false})
 
     var v7 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 1500,
-      "height": 500,
-      "title": "Mentions of Machine Learning in Publication Titles",
+      "width": "container",
+      "height": 400,
       "data": {
         "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
       },
       "transform": [
-        {"filter": "!isValid(datum.pub_title) ? false : (indexof(datum.pub_title, 'machine learning') > -1 || indexof(datum.pub_title, 'Machine Learning') > -1)"},
+        { "filter": "!isValid(datum.pub_title) ? false : (indexof(datum.pub_title, 'machine learning') > -1 || indexof(datum.pub_title, 'Machine Learning') > -1)" },
         { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "2013" } },
         {
           "aggregate": [
@@ -409,39 +432,63 @@
       ],
       "layer": [
         {
-      "mark": {
-        "type": "line",
-        "color": "firebrick"
-      },
-      "transform": [
-        {
-          "regression": "pub_year",
-          "on": "distinct_pub_doi",
-          "method": "pow"
-        }
-      ],
-      "encoding": {
-        "x": {
-          "field": "pub_year",
-          "type": "temporal"
+          "mark": {
+            "type": "line",
+            "color": "firebrick"
+          },
+          "transform": [
+            {
+              "regression": "pub_year",
+              "on": "distinct_pub_doi",
+              "method": "pow"
+            }
+          ],
+          "encoding": {
+            "x": {
+              "field": "pub_year",
+              "type": "temporal",
+              "title": "Publication Year"
+            },
+            "y": {
+              "field": "distinct_pub_doi",
+              "type": "quantitative",
+              "title": "Count of Publications"
+            }
+          }
         },
-        "y": {
-          "field": "distinct_pub_doi",
-          "type": "quantitative"
-        }
-      }
-    },
         {
-          "mark": {"type": "point", "size": 80},
+          "mark": { "type": "point", "size": 80 },
           "encoding": {
             "x": { "field": "pub_year", "type": "temporal" },
-            "y": { "field": "distinct_pub_doi", "type": "quantitative"}
+            "y": { "field": "distinct_pub_doi", "type": "quantitative" }
           }
         }
       ]
     };
 
-    vegaEmbed('#vis7', v7)
+    vegaEmbed('#vis7', v7, {"actions": false})
+
+    var v8 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": "container",
+      "height": 400,
+      "data": {
+        "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/cluster_totals.csv"
+      },
+      "mark": {"type": "rect", "tooltip": { "content": "data" }},
+      "encoding": {
+        "x": { "field": "cluster", "type": "nominal", "axis": { "labelAngle": 50 }, "title": "Cluster Keywords" },
+        "y": {
+          "type": "quantitative",
+          "field": "cluster_count",
+          "scale": { "type": "log", "domain": [1, 3657] },
+          "title": "Publication Count"
+        }, 
+        "color": { "type": "nominal", "field": "cluster", "legend": null }
+      }
+    };
+
+    vegaEmbed('#vis8', v8, {"actions": false});
 
   </script>
 </body>
