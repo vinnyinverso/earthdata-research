@@ -419,7 +419,7 @@
         "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
       },
       "transform": [
-        { "filter": "!isValid(datum.pub_title) ? false : (indexof(datum.pub_title, 'machine learning') > -1 || indexof(datum.pub_title, 'Machine Learning') > -1)" },
+        { "filter": "!isValid(datum.pub_title) ? false : (indexof(lower(datum.pub_title), 'machine learning') > -1 || indexof(lower(datum.pub_title), 'neural') > -1)" },
         { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "2013" } },
         {
           "aggregate": [
