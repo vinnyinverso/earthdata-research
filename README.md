@@ -14,6 +14,9 @@ Contains aggregate counts of clusters that were obtained by analyzing article ab
 ### locations
 Contains geocoded locations that were extracted from research articles using spaCy (https://spacy.io/) and OpenStreetMap (https://www.openstreetmap.org).
 
+### open_pubs
+Contains a list of publication DOI's, along with a column specifying whether the publication comes from an open access journal.
+
 ## Contributions
 
 ### Authors
