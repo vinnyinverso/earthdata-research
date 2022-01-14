@@ -473,8 +473,7 @@
     var v8 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "transform": [
-        {"filter": "datum.cluster != 'Grand Total'"},
-              { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "1995" } }
+        {"filter": "datum.cluster != 'Grand Total'"}
               ],
       "width": "container",
       "height": 400,
@@ -487,7 +486,7 @@
         "y": {
           "type": "quantitative",
           "field": "cluster_count",
-          "scale": { "type": "log"},
+          "scale": { "type": "log", "domain": [1, 215]},
           "title": "Publication Count"
         }, 
         "color": { "type": "nominal", "field": "cluster", "legend": null }
@@ -501,6 +500,7 @@
   "data": { "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/open_pubs.csv"},
   "transform": [
     {"filter": "isValid(datum.pub_year)"},
+                  { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "1995" } },
     {"filter": "datum.pub_year != ''"},
     {"calculate": "datum.is_open == 'TRUE' ? 'Open Access' : 'Closed Access'", "as": "is_open"}
   ],
