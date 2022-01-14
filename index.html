@@ -55,7 +55,7 @@
     <div class="viz-item" id="vis6" style="width: initial;"></div>
     <h2>Mentions of Machine Learning in Publication Titles</h2>
     <div class="viz-item" id="vis7"></div>
-    <h2>Publications in Open Journals</h2>
+    <h2>Publication Count By Accesss Type (Open or Closed)</h2>
     <div class="viz-item" id="vis9"></div>
   </div>
 
@@ -472,6 +472,9 @@
 
     var v8 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "transform": [
+        {"filter": "datum.cluster != 'Grand Total'"}
+              ],
       "width": "container",
       "height": 400,
       "data": {
@@ -493,61 +496,50 @@
     vegaEmbed('#vis8', v8, {"actions": false});
     
     var v9 = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": 800,
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": { "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/open_pubs.csv"},
+  "transform": [
+    {"filter": "isValid(datum.pub_year)"},
+    {"filter": "datum.pub_year != ''"},
+    {"calculate": "datum.is_open == 'TRUE' ? 'Open Access' : 'Closed Access'", "as": "is_open"}
+  ],
+"width": "container",
       "height": 400,
-      "data": {
-        "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
+  "encoding": {
+    "y": {"field": "pub_year", "title": "Publication Year"}
+  },
+  "layer": [{
+    "mark": "bar",
+    "encoding": {
+      "x": {
+        "aggregate": "distinct", "field": "pub_doi",
+        "title": "Publication Count",
+        "stack":  "normalize"
       },
-      "transform": [
-        { "filter": "!isValid(datum.pub_title) ? false : (indexof(lower(datum.pub_journal), 'int. j. appl. earth obs.') > -1 || indexof(lower(datum.pub_journal), 'frontiers') > -1 || indexof(lower(datum.pub_journal), 'arxiv') > -1 || indexof(lower(datum.pub_journal), 'plos one') > -1 || indexof(lower(datum.pub_journal), 'environment international') > -1 || indexof(lower(datum.pub_journal), 'international journal of applied earth observation') > -1 || indexof(lower(datum.pub_journal), 'journal of hydrology') > -1 || indexof(lower(datum.pub_journal), 'environmental research letters') > -1)" },
-        
-        {
-          "aggregate": [
-            {
-              "op": "distinct",
-              "field": "pub_doi",
-              "as": "distinct_pub_doi"
-            }
-          ],
-          "groupby": ["pub_year"]
-        }
-      ],
-      "layer": [
-        {
-          "mark": {
-            "type": "line",
-            "color": "firebrick"
-          },
-          "transform": [
-            {
-              "regression": "pub_year",
-              "on": "distinct_pub_doi",
-              "method": "pow"
-            }
-          ],
-          "encoding": {
-            "x": {
-              "field": "pub_year",
-              "type": "temporal",
-              "title": "Publication Year"
-            },
-            "y": {
-              "field": "distinct_pub_doi",
-              "type": "quantitative",
-              "title": "Count of Publications"
-            }
-          }
-        },
-        {
-          "mark": { "type": "point", "size": 80 },
-          "encoding": {
-            "x": { "field": "pub_year", "type": "temporal" },
-            "y": { "field": "distinct_pub_doi", "type": "quantitative" }
-          }
-        }
-      ]
-    };
+      "color": {
+        "field": "is_open",
+        "scale": {"range": ["#675193", "#ca8861"]}
+      }
+    }
+  }, {
+    "mark": {"type": "text", "opacity": 0.9, "color": "white"},
+    "encoding": {
+      "x": {
+        "aggregate": "distinct", "field": "pub_doi",
+        "title": "Publication Count",
+        "stack":  "normalize",
+        "bandPosition": 0.5
+      },
+      "text": {
+        "aggregate": "distinct", "field": "pub_doi",
+        "title": "Publication Count"
+      },
+      "detail": {
+        "field": "is_open"
+      }
+    }
+  }]
+};
     
    vegaEmbed('#vis9', v9, {"actions": false});
 
