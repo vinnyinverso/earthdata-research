@@ -562,7 +562,7 @@
           "sort": [{ "field": "count", "order": "descending" }]
         },
         { "filter": "datum.rank < 30" },
-        { "filter": "datum.location != '' && datum.location != 'MODIS' && datum.location != 'Earth'" }
+        { "filter": "datum.location != '' && datum.location != 'MODIS' && datum.location != 'Earth' && datum.location != 'Asia' && datum.location != 'Africa'&& datum.location != 'North America' && datum.location != 'South America' && datum.location != 'Europe' && datum.location != 'Austrailia'" }
       ],
       "encoding": {
         "y": { "type": "nominal", "field": "location", "sort": { "field": "count", "order": "ascending" }, "axis": null }
