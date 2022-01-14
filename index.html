@@ -43,6 +43,8 @@
     <div class="viz-item" id="vis8"></div>
     <h2>Publication Location of Study</h2>
     <div class="viz-item" id="vis1"></div>
+    <h2>Frequent Locations of Study</h2>
+    <div class="viz-item" id="vis10"></div>
     <h2>Average Number of Datasets Referenced Per Publication</h2>
     <div class="viz-item" id="vis2"></div>
     <h2>Frequently Referenced Datasets</h2>
@@ -543,6 +545,45 @@
 };
     
    vegaEmbed('#vis9', v9, {"actions": false});
+    
+    var v10 = {
+      "data": { "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/locations.csv" },
+      "width": "container",
+      "height": 400,
+      "transform": [
+        {
+          "aggregate": [
+            { "op": "count", "field": "*", "as": "count" }
+          ],
+          "groupby": ["location"]
+        },
+        {
+          "window": [{ "op": "row_number", "field": "", "as": "rank" }],
+          "sort": [{ "field": "count", "order": "descending" }]
+        },
+        { "filter": "datum.rank < 30" },
+        { "filter": "datum.location != '' && datum.location != 'MODIS' && datum.location != 'Earth'" }
+      ],
+      "encoding": {
+        "y": { "type": "nominal", "field": "location", "sort": { "field": "count", "order": "ascending" }, "axis": null }
+      },
+      "layer": [
+        {
+          "mark": { "type": "bar", "color": "#b7f7b9" }, "encoding": {
+            "x": { "type": "quantitative", "field": "count", "title": "Count of Publications" }
+          }
+        },
+        {
+          "mark": { "type": "text", "align": "left", "x": 5 },
+          "encoding": {
+            "text": { "field": "location" }
+          }
+        }
+      ],
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json"
+    };
+    
+       vegaEmbed('#vis10', v10, {"actions": false});
 
   </script>
 </body>
