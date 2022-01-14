@@ -473,7 +473,8 @@
     var v8 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
             "transform": [
-        {"filter": "datum.cluster != 'Grand Total'"}
+        {"filter": "datum.cluster != 'Grand Total'"},
+              { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "1995" } }
               ],
       "width": "container",
       "height": 400,
@@ -486,7 +487,7 @@
         "y": {
           "type": "quantitative",
           "field": "cluster_count",
-          "scale": { "type": "log", "domain": [1, 3657] },
+          "scale": { "type": "log"},
           "title": "Publication Count"
         }, 
         "color": { "type": "nominal", "field": "cluster", "legend": null }
