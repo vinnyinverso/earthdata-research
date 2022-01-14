@@ -39,7 +39,7 @@
     </p>
     <h2>Count of Publications By Year</h2>
     <div class="viz-item" id="vis0"></div>
-    <h2>Publication Abstract Text Embedding Clusters</h2>
+    <h2>Research Topic Clusters</h2>
     <div class="viz-item" id="vis8"></div>
     <h2>Publication Location of Study</h2>
     <div class="viz-item" id="vis1"></div>
@@ -514,7 +514,7 @@
     "encoding": {
       "x": {
         "aggregate": "distinct", "field": "pub_doi",
-        "title": "Publication Count",
+        "title": "Percent",
         "stack":  "normalize"
       },
       "color": {
@@ -527,13 +527,13 @@
     "encoding": {
       "x": {
         "aggregate": "distinct", "field": "pub_doi",
-        "title": "Publication Count",
+        "title": "Percent",
         "stack":  "normalize",
         "bandPosition": 0.5
       },
       "text": {
         "aggregate": "distinct", "field": "pub_doi",
-        "title": "Publication Count"
+        "title": "Percent"
       },
       "detail": {
         "field": "is_open"
