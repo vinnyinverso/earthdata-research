@@ -135,7 +135,8 @@
           "encoding": {
             "tooltip": [
               { "field": "latitude", "type": "quantitative" },
-              { "field": "longitude", "type": "quantitative" }
+              { "field": "longitude", "type": "quantitative" },
+              { "field": "location", "type": "text" }
             ],
             "longitude": {
               "field": "longitude",
@@ -489,7 +490,7 @@
         "y": {
           "type": "quantitative",
           "field": "cluster_count",
-          "scale": { "type": "log", "domain": [1, 215]},
+          "scale": { "domain": [1, 215]},
           "title": "Publication Count"
         }, 
         "color": { "type": "nominal", "field": "cluster", "legend": null }
