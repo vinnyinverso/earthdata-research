@@ -40,6 +40,8 @@
     </p>
     <h2>Count of Publications By Year</h2>
     <div class="viz-item" id="vis0"></div>
+    <h2>Count of MODIS DOI By Year</h2>
+    <div class="viz-item" id="vis11"></div>
     <h2>Research Topic Clusters</h2>
     <div class="viz-item" id="vis8"></div>
     <h2>Publication Location of Study</h2>
@@ -587,6 +589,52 @@
     
        vegaEmbed('#vis10', v10, {"actions": false});
 
+
+    var v11 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": "container",
+      "height": 400,
+      "description": "A simple bar chart with embedded data.",
+      "data": {
+        "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv"
+      },
+      "mark": {
+        "tooltip": true,
+        "type": "area",
+        "line": {
+          "color": "steelblue"
+        },
+        "color": {
+          "x1": 1,
+          "y1": 1,
+          "x2": 1,
+          "y2": 0,
+          "gradient": "linear",
+          "stops": [
+            {
+              "offset": 0,
+              "color": "white"
+            },
+            {
+              "offset": 1,
+              "color": "steelblue"
+            }
+          ]
+        }
+      },
+      "encoding": {
+        "tooltip": [
+          { "aggregate": "distinct", "type": "quantitative", "field": "pub_doi", "title": "Count of Publications" }
+        ],
+        "x": { "field": "pub_year", "type": "temporal", "title": "Publication Year" },
+        "y": { "aggregate": "distinct", "field": "pub_doi", "title": "Count of Publications" }
+      },
+      "transform": [
+        { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "1998" } },
+        {"filter": "indexof(lower(datum.ds_doi), 'modis') > -1"}
+      ]
+    };
+    vegaEmbed('#vis11', v11, {"actions": false});
   </script>
 </body>
 
