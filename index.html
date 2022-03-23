@@ -21,6 +21,10 @@
   .viz-item {
     width: 80%;
   }
+
+  .mt {
+    margin-top: 50px;
+  }
 </style>
 
 <body>
@@ -40,31 +44,31 @@
     </p>
     <h2>Count of Publications By Year</h2>
     <div class="viz-item" id="vis0"></div>
-    <h2>Count of MODIS DOI By Year</h2>
+    <h2 class="mt" class="mt">Count of MODIS DOI By Year</h2>
     <div class="viz-item" id="vis11"></div>
-    <h2>Publication Category Distribution</h2>
+    <h2 class="mt">Publication Category Distribution</h2>
     <div class="viz-item" id="vis12"></div>
-    <h2>Research Topic Clusters</h2>
+    <h2 class="mt">Research Topic Clusters</h2>
     <div class="viz-item" id="vis8"></div>
-    <h2>Publication Location of Study</h2>
+    <h2 class="mt">Publication Location of Study</h2>
     <div class="viz-item" id="vis1"></div>
-    <h2>Frequent Locations of Study</h2>
+    <h2 class="mt">Frequent Locations of Study</h2>
     <div class="viz-item" id="vis10"></div>
-    <h2>Average Number of Datasets Referenced Per Publication</h2>
+    <h2 class="mt">Average Number of Datasets Referenced Per Publication</h2>
     <div class="viz-item" id="vis2"></div>
-    <h2>Frequently Referenced Datasets</h2>
+    <h2 class="mt">Frequently Referenced Datasets</h2>
     <div class="viz-item" id="vis3"></div>
-    <h2>Frequent Journals</h2>
+    <h2 class="mt">Frequent Journals</h2>
     <div class="viz-item" id="vis4"></div>
-    <h2>Dataset Journal Copresence</h2>
+    <h2 class="mt">Dataset Journal Copresence</h2>
     <div class="viz-item" id="vis5"></div>
-    <h2>Mentions of Machine Learning in Publication Titles</h2>
+    <h2 class="mt">Mentions of Machine Learning in Publication Titles</h2>
     <div class="viz-item" id="vis7"></div>
-    <h2>Publication Count By Accesss Type (Open or Closed)</h2>
+    <h2 class="mt">Publication Count By Accesss Type (Open or Closed)</h2>
     <div class="viz-item" id="vis9"></div>
-    <h2>Unique Journal Count (% Change Year Over Year)</h2>
+    <h2 class="mt">Unique Journal Count (% Change Year Over Year)</h2>
     <div class="viz-item" id="vis13"></div>
-    <h2>Journals with Count of Publications = 1</h2>
+    <h2 class="mt">Journals with Count of Publications = 1</h2>
     <div class="viz-item" id="vis6" style="width: initial;"></div>
   </div>
 
@@ -209,14 +213,14 @@
     var v1 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
       "width": "container",
-      "height": 400,
+      "height": 500,
       "layer": [
         {
           "data": {
             "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/world-110m.json",
             "format": { "type": "topojson", "feature": "countries" }
           },
-          "mark": { "type": "geoshape", "fill": "lightgray", "stroke": "gray" }
+          "mark": { "type": "geoshape", "fill": "#fcdcdc", "stroke": "white" }
         },
         {
           "data": {
@@ -227,8 +231,8 @@
           },
           "mark": {
             "type": "circle",
-            "size": 10,
-            "color": "steelblue"
+            "size": 14,
+            "color": "#ff36ff"
           },
           "encoding": {
             "tooltip": [
