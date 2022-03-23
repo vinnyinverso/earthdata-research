@@ -42,6 +42,8 @@
     <div class="viz-item" id="vis0"></div>
     <h2>Count of MODIS DOI By Year</h2>
     <div class="viz-item" id="vis11"></div>
+    <h2>Publication Category Distribution</h2>
+    <div class="viz-item" id="vis12"></div>
     <h2>Research Topic Clusters</h2>
     <div class="viz-item" id="vis8"></div>
     <h2>Publication Location of Study</h2>
@@ -65,6 +67,53 @@
   </div>
 
   <script type="text/javascript">
+    var v12 = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "height": 400,
+      "width": "container",
+      "description": "A simple donut chart with embedded data.",
+      "data": {
+        "values": [
+          { "category": "Aerosols", "value": 78 },
+          { "category": "Agriculture", "value": 64 },
+          { "category": "Air Quality", "value": 16 },
+          { "category": "Atmospheric Chemistry", "value": 94 },
+          { "category": "Biodiversity", "value": 75 },
+          { "category": "Climate", "value": 105 },
+          { "category": "Clouds + Water Vapor", "value": 37 },
+          { "category": "Cyclones", "value": 145 },
+          { "category": "Data Science", "value": 87 },
+          { "category": "Earthquakes", "value": 2 },
+          { "category": "Fire", "value": 142 },
+          { "category": "Floods", "value": 56 },
+          { "category": "Geodesy", "value": 44 },
+          { "category": "Human Activity", "value": 228 },
+          { "category": "Land Surface Properties", "value": 78 },
+          { "category": "Landslides", "value": 84 },
+          { "category": "Ocean Biology", "value": 59 },
+          { "category": "Ocean Chemistry", "value": 35 },
+          { "category": "Ocean Physics", "value": 130 },
+          { "category": "Precipitation", "value": 73 },
+          { "category": "Radiation + Energy Budget", "value": 18 },
+          { "category": "Radiation + Energy Budget?", "value": 1 },
+          { "category": "Sea Level", "value": 41 },
+          { "category": "Snow + Ice", "value": 82 },
+          { "category": "Soil Properties", "value": 108 },
+          { "category": "Solid Earth", "value": 13 },
+          { "category": "Vegetation", "value": 284 },
+          { "category": "Volcanoes", "value": 44 },
+          { "category": "Water Resources", "value": 123 },
+          { "category": "Weather", "value": 105 }
+        ]
+      },
+      "mark": { "type": "arc", "innerRadius": 50, "tooltip": true },
+      "encoding": {
+        "theta": { "field": "value", "type": "quantitative" },
+        "color": { "field": "category", "type": "nominal", "legend": null }
+      }
+    };
+    vegaEmbed('#vis12', v12, { "actions": false });
+
     var v0 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
       "width": "container",
@@ -108,7 +157,7 @@
         { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "1998" } }
       ]
     };
-    vegaEmbed('#vis0', v0, {"actions": false});
+    vegaEmbed('#vis0', v0, { "actions": false });
 
     var v1 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -152,7 +201,7 @@
         }
       ]
     };
-    vegaEmbed('#vis1', v1, {"actions": false});
+    vegaEmbed('#vis1', v1, { "actions": false });
 
     var v2 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -213,7 +262,7 @@
         }
       ]
     };
-    vegaEmbed('#vis2', v2, {"actions": false});
+    vegaEmbed('#vis2', v2, { "actions": false });
 
     var v3 = {
       "data": { "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/article_db.csv" },
@@ -252,7 +301,7 @@
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json"
     };
 
-    vegaEmbed('#vis3', v3, {"actions": false});
+    vegaEmbed('#vis3', v3, { "actions": false });
 
     var v4 = {
       "width": "container",
@@ -293,7 +342,7 @@
       ]
     };
 
-    vegaEmbed('#vis4', v4, {"actions": false});
+    vegaEmbed('#vis4', v4, { "actions": false });
 
     var v5 = {
       "width": "container",
@@ -360,7 +409,7 @@
       }
     };
 
-    vegaEmbed('#vis5', v5, {"actions": false});
+    vegaEmbed('#vis5', v5, { "actions": false });
 
     var v6 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -415,7 +464,7 @@
         }
       }
     };
-    vegaEmbed('#vis6', v6, {"actions": false})
+    vegaEmbed('#vis6', v6, { "actions": false })
 
     var v7 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
@@ -474,82 +523,82 @@
       ]
     };
 
-    vegaEmbed('#vis7', v7, {"actions": false})
+    vegaEmbed('#vis7', v7, { "actions": false })
 
     var v8 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-            "transform": [
-        {"filter": "datum.cluster != 'Grand Total'"}
-              ],
+      "transform": [
+        { "filter": "datum.cluster != 'Grand Total'" }
+      ],
       "width": "container",
       "height": 400,
       "data": {
         "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/cluster_totals.csv"
       },
-      "mark": {"type": "rect", "tooltip": { "content": "data" }},
+      "mark": { "type": "rect", "tooltip": { "content": "data" } },
       "encoding": {
         "x": { "field": "cluster", "type": "nominal", "axis": { "labelAngle": 50 }, "title": "Cluster Keywords" },
         "y": {
           "type": "quantitative",
           "field": "cluster_count",
-          "scale": { "domain": [1, 215]},
+          "scale": { "domain": [1, 215] },
           "title": "Publication Count"
-        }, 
+        },
         "color": { "type": "nominal", "field": "cluster", "legend": null }
       }
     };
 
-    vegaEmbed('#vis8', v8, {"actions": false});
-    
+    vegaEmbed('#vis8', v8, { "actions": false });
+
     var v9 = {
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "data": { "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/open_pubs.csv"},
-  "transform": [
-    {"filter": "isValid(datum.pub_year)"},
-                  { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "1995" } },
-    {"filter": "datum.pub_year != ''"},
-    {"calculate": "datum.is_open == 'TRUE' ? 'Open Access' : 'Closed Access'", "as": "is_open"}
-  ],
-"width": "container",
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "data": { "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/open_pubs.csv" },
+      "transform": [
+        { "filter": "isValid(datum.pub_year)" },
+        { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "1995" } },
+        { "filter": "datum.pub_year != ''" },
+        { "calculate": "datum.is_open == 'TRUE' ? 'Open Access' : 'Closed Access'", "as": "is_open" }
+      ],
+      "width": "container",
       "height": 600,
-  "encoding": {
-    "y": {"field": "pub_year", "type": "temporal", "title": "Publication Year"}
-  },
-  "layer": [{
-"mark": {"type": "bar", "height": 20},
-    "encoding": {
-      "x": {
-        "aggregate": "distinct", "field": "pub_doi",
-        "title": "Percent",
-        "stack":  "normalize"
+      "encoding": {
+        "y": { "field": "pub_year", "type": "temporal", "title": "Publication Year" }
       },
-      "color": {
-        "field": "is_open",
-        "scale": {"range": ["#675193", "#ca8861"]}
-      }
-    }
-  }, {
-    "mark": {"type": "text", "opacity": 0.9, "color": "white"},
-    "encoding": {
-      "x": {
-        "aggregate": "distinct", "field": "pub_doi",
-        "title": "Percent",
-        "stack":  "normalize",
-        "bandPosition": 0.5
-      },
-      "text": {
-        "aggregate": "distinct", "field": "pub_doi",
-        "title": "Percent"
-      },
-      "detail": {
-        "field": "is_open"
-      }
-    }
-  }]
-};
-    
-   vegaEmbed('#vis9', v9, {"actions": false});
-    
+      "layer": [{
+        "mark": { "type": "bar", "height": 20 },
+        "encoding": {
+          "x": {
+            "aggregate": "distinct", "field": "pub_doi",
+            "title": "Percent",
+            "stack": "normalize"
+          },
+          "color": {
+            "field": "is_open",
+            "scale": { "range": ["#675193", "#ca8861"] }
+          }
+        }
+      }, {
+        "mark": { "type": "text", "opacity": 0.9, "color": "white" },
+        "encoding": {
+          "x": {
+            "aggregate": "distinct", "field": "pub_doi",
+            "title": "Percent",
+            "stack": "normalize",
+            "bandPosition": 0.5
+          },
+          "text": {
+            "aggregate": "distinct", "field": "pub_doi",
+            "title": "Percent"
+          },
+          "detail": {
+            "field": "is_open"
+          }
+        }
+      }]
+    };
+
+    vegaEmbed('#vis9', v9, { "actions": false });
+
     var v10 = {
       "data": { "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/locations.csv" },
       "width": "container",
@@ -586,8 +635,8 @@
       ],
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json"
     };
-    
-       vegaEmbed('#vis10', v10, {"actions": false});
+
+    vegaEmbed('#vis10', v10, { "actions": false });
 
 
     var v11 = {
@@ -631,10 +680,10 @@
       },
       "transform": [
         { "filter": { "timeUnit": "year", "field": "pub_year", "gte": "1998" } },
-        {"filter": "indexof(lower(datum.ds_doi), 'modis') > -1"}
+        { "filter": "indexof(lower(datum.ds_doi), 'modis') > -1" }
       ]
     };
-    vegaEmbed('#vis11', v11, {"actions": false});
+    vegaEmbed('#vis11', v11, { "actions": false });
   </script>
 </body>
 
