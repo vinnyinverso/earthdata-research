@@ -62,7 +62,7 @@
     <div class="viz-item" id="vis7"></div>
     <h2>Publication Count By Accesss Type (Open or Closed)</h2>
     <div class="viz-item" id="vis9"></div>
-    <h2>Unique Journal Count (Year Over Year, % Change)</h2>
+    <h2>Unique Journal Count (% Change Year Over Year)</h2>
     <div class="viz-item" id="vis13"></div>
     <h2>Journals with Count of Publications = 1</h2>
     <div class="viz-item" id="vis6" style="width: initial;"></div>
@@ -98,7 +98,7 @@
           { "category": "2021", "value": -0.4254545455 }
         ]
       },
-      "mark": "bar",
+      "mark": {"type": "bar", "tooltip": {"content": "encoding"}},
       "encoding": {
         "color": {
           "field": "value",
