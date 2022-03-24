@@ -157,7 +157,7 @@
           { "category": "2021", "value": -0.4254545455 }
         ]
       },
-      "mark": {"type": "bar", "tooltip": {"content": "encoding"}},
+      "mark": {"type": "bar", "tooltip": {"content": "encoding"}, "cornerRadius": 7},
       "encoding": {
         "color": {
           "field": "value",
@@ -393,7 +393,7 @@
       },
       "layer": [
         {
-          "mark": { "type": "bar", "color": "#d293ed" }, "encoding": {
+          "mark": { "type": "bar", "color": "#d293ed", "cornerRadius": 7 }, "encoding": {
             "x": { "type": "quantitative", "field": "count", "title": "Count of Dataset References" }
           }
         },
@@ -435,7 +435,7 @@
       },
       "layer": [
         {
-          "mark": { "type": "bar", "color": "#ffd978" }, "encoding": {
+          "mark": { "type": "bar", "color": "#ffd978", "cornerRadius": 7 }, "encoding": {
             "x": { "type": "quantitative", "field": "pub_count", "title": "Count of Publications" }
           }
         },
@@ -550,7 +550,7 @@
       ],
       "layer": [
         {
-          "mark": { "type": "bar", "color": "#ddd" }, "encoding": {
+          "mark": { "type": "bar", "color": "#ddd", "cornerRadius": 7 }, "encoding": {
             "x": { "type": "quantitative", "field": "count", "axis": null }
           }
         },
@@ -641,7 +641,7 @@
       "data": {
         "url": "https://raw.githubusercontent.com/vinnyinverso/earthdata-research/main/cluster_totals.csv"
       },
-      "mark": { "type": "rect", "tooltip": { "content": "data" } },
+      "mark": { "type": "rect", "tooltip": { "content": "data" }, "cornerRadiusTopLeft": 7, "cornerRadiusTopRight": 7 },
       "encoding": {
         "x": { "field": "cluster", "type": "nominal", "axis": { "labelAngle": 50 }, "title": "Cluster Keywords" },
         "y": {
@@ -728,7 +728,7 @@
       },
       "layer": [
         {
-          "mark": { "type": "bar", "color": "#b7f7b9" }, "encoding": {
+          "mark": { "type": "bar", "color": "#b7f7b9", "cornerRadius": 7 }, "encoding": {
             "x": { "type": "quantitative", "field": "count", "title": "Count of Publications" }
           }
         },
