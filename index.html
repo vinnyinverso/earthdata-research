@@ -18,6 +18,36 @@
     align-items: center;
   }
 
+  .count-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 80%;
+  }
+
+  .count-titles {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    width: 80%;
+  }
+
+  .count-item {
+    border-radius: 10px;
+    width: 50%;
+    height: 300px;
+    margin: 20px;
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
   .viz-item {
     width: 80%;
   }
@@ -25,23 +55,48 @@
   .mt {
     margin-top: 50px;
   }
+
+  .counter {
+    font-size: 5vw;
+  }
+  
 </style>
 
 <body>
   <div class="viz-container">
-    <h1>Research Publications with EOSDIS Data</h1>
-    <p style="width: 80%;">
-      The following charts show analyses that were built upon a datset of over <b>10,000
-        research publications</b> that reference EOSDIS datasets from 1974 to the present.
-      Results are biased toward specific datasets and areas of study within
-      EOSDIS depending upon where and how the data was collected. Crucial data contributions were made by
-      individuals from various Distributed Active Archive Centers:
+    <h1 style="font-size: 3rem;">Research Publications with EOSDIS Data</h1>
+    <p style="color:#6c6c6c; width: 76%; background-color: #f9f9f9; padding: 10px;border-radius: 10px;">
+      The following was built upon a datset of
+      research publications that reference <a href="https://earthdata.nasa.gov/eosdis" target="__blank">EOSDIS</a> datasets from 1974 to the present.
+      Crucial contributions were made by:
       Irina Gerasimov and Dave Meyer from GES DISC DAAC,
       Wade Albright from Alaska Satellite Facility DAAC,
       Chris Torbert and Danielle Golon from The Land Processes DAAC,
       Suresh Vannan and Ed Armstrong from The Physical Oceanography DAAC,
       and Bruce Wilson from Oak Ridge National Laboratory DAAC.
     </p>
+    <div class="count-titles">
+      <h2>Publications</h2>
+      <h2>Dataset References</h2>
+    </div>
+    <div class="count-container">
+      <div class="count-item" style="background-color: #d4e4ff;">
+        <div class="counter">
+          8,932
+        </div>
+        <div>
+          14,361
+        </div>
+      </div>
+      <div class="count-item" style="background-color: #fff1d4;">
+        <div class="counter">
+          14,361
+        </div>
+        <div>
+          14,361
+        </div>
+      </div>
+    </div>
     <h2>Count of Publications By Year</h2>
     <div class="viz-item" id="vis0"></div>
     <h2 class="mt" class="mt">Count of MODIS DOI By Year</h2>
@@ -122,7 +177,7 @@
 
     var v12 = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "height": 400,
+      "height": 500,
       "width": "container",
       "data": {
         "values": [
